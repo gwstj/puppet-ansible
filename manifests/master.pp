@@ -61,7 +61,7 @@ class ansible::master(
   if (not is_bool($ansible::user::manage_user)) {
     fail('parameter "manage_user" must be true or false')
   }
-  if (not is_bool($ansible::user::manage_sh_known_hosts) {
+  if (not is_bool($ansible::user::manage_sh_known_hosts)) {
     fail('parameter "manage_ssh_known_hosts" must be true or false')
   }
 
