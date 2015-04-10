@@ -18,6 +18,10 @@
 # [*master*]
 # The fqdn of the master host (**string**) (**required**)
 #
+# [*sudo*]
+# Set to 'disable' if you don't want to authorize ansible user to behave like
+# root (**boolean**) (**optional**)
+#
 # == Example
 #
 # class { 'ansible::node' :
@@ -26,12 +30,16 @@
 #
 class ansible::node(
   $master = 'none'
+  $sudo   = 'enable'
   ){
 
   include ansible::params
 
   if $ansible::node::master == 'none' {
     fail('master parameter must be set')
+  }
+  if ($ansible::node::sudo != 'enable' and $ansible::node::sudo != 'disable') {
+    fail('sudo parameter must be "enable" or "disable"')
   }
 
   # Export host key to store config
@@ -47,7 +55,7 @@ class ansible::node(
 
   # Create ansible user with sudo
   class { 'ansible::user' :
-    sudo => 'enable'
+    sudo => $ansible::node::sudo
   }
 
 }

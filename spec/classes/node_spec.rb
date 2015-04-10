@@ -18,6 +18,22 @@ describe 'ansible::node' do
 
   end
 
+  context 'When you add an ansible::node class without sudo' do
+    let(:facts) { {:osfamily => 'Debian' } }
+    let(:params) { {:master => 'host.fqdn.tld'} {:sudo => 'disable'} }
+
+    it { should contain_class('ansible::params') }
+
+    it { should contain_class('ansible::node').with(
+      'master' => 'host.fqdn.tld'
+    )}
+
+    it { should contain_class('ansible::user').with(
+      'sudo' => 'disable'
+    )}
+
+  end
+
   context 'When you add an ansible::node class without master parameter' do
     let(:facts) { {:osfamily => 'Debian' } }
 
