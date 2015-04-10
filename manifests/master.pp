@@ -23,6 +23,14 @@
 #   **automatic** : install ansible via the appropriate platform provider
 #   **manual** : don't install anything
 #
+# [*sudo*]
+# Set to 'disable' if you don't want to authorize ansible user to behave like
+# root (**Default: enable**) (**boolean**)
+#
+# [*manage_ssh_known_hosts*]
+# manage /etc/ssh/ssh_known_hosts file.
+# (**Default: true**) (**boolean**)
+#
 # == Examples
 #
 # === Deploy an ansible master
@@ -43,14 +51,25 @@
 #
 class ansible::master(
   $provider = 'pip',
+  $sudo = 'enable',
   $manage_ssh_known_hosts = 'true',
+  $manage_user = 'true',
   ){
 
   include ansible::params
 
+  if (not is_bool($ansible::user::manage_user)) {
+    fail('parameter "manage_user" must be true or false')
+  }
+  if (not is_bool($ansible::user::manage_sh_known_hosts) {
+    fail('parameter "manage_ssh_known_hosts" must be true or false')
+  }
+
   # Create ansible user with sudo
-  class { 'ansible::user' :
-    sudo => 'enable'
+  if ($ansible::user::manage_user) {
+    class { 'ansible::user' :
+      sudo => $ansible::user::sudo,
+    }
   }
 
   # Install Ansible
