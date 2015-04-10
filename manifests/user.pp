@@ -42,37 +42,38 @@
 #
 class ansible::user(
   $sudo = 'disable',
-  $password = '*NP*'
+  $password = '*NP*',
+  $username = 'ansible',
 ) {
 
   include ansible::params
 
   # Create an 'ansible' user
-  user { 'ansible':
+  user { $ansible::user::username:
     ensure     => present,
     comment    => 'ansible',
     managehome => true,
     shell      => '/bin/bash',
-    home       => '/home/ansible',
+    home       => "/home/${ansible::user::username}",
     password   => $ansible::user::password
   }
 
   # Create a .ssh directory for the 'ansible' user
-  file { '/home/ansible/.ssh' :
+  file { "/home/${ansible::user::username}/.ssh" :
     ensure  => directory,
     mode    => '0700',
-    owner   => 'ansible',
-    group   => 'ansible',
-    require => User[ansible],
+    owner   => $ansible::user::username,
+    group   => $ansible::user::username,
+    require => User[$ansible::user::username],
     notify  => Exec[home_ansible_ssh_keygen]
   }
 
   # Generate rsa keys for the 'ansible' user
   exec { 'home_ansible_ssh_keygen':
     path    => ['/usr/bin'],
-    command => 'ssh-keygen -t rsa -q -f /home/ansible/.ssh/id_rsa -N ""',
-    creates => '/home/ansible/.ssh/id_rsa',
-    user    => 'ansible',
+    command => "ssh-keygen -t rsa -q -f /home/${ansible::user::username}/.ssh/id_rsa -N \"\"",
+    creates => "/home/${ansible::user::username}/.ssh/id_rsa",
+    user    => $ansible::user::username,
     require => Package['openssh-server']
   }
 
