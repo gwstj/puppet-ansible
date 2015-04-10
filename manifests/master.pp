@@ -42,7 +42,8 @@
 # }
 #
 class ansible::master(
-  $provider = 'pip'
+  $provider = 'pip',
+  $manage_ssh_known_hosts = 'true',
   ){
 
   include ansible::params
@@ -85,10 +86,12 @@ class ansible::master(
 
   # Fix /etc/ssh/ssh_known_hosts permission
   # See http://projects.puppetlabs.com/issues/2014
-  ensure_resource('file', '/etc/ssh/ssh_known_hosts', {
-      'ensure'  => 'file',
-      'mode'    => '0644',
-    }
-  )
+  if ($manage_ssh_known_hosts) {
+    ensure_resource('file', '/etc/ssh/ssh_known_hosts', {
+        'ensure'  => 'file',
+        'mode'    => '0644',
+      }
+    )
+  }
 
 }
