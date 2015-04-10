@@ -59,7 +59,7 @@ class ansible::master(
   include ansible::params
 
   validate_bool($ansible::master::manage_user)
-  validate_bool($ansible::master::manage_sh_known_hosts)
+  validate_bool($ansible::master::manage_ssh_known_hosts)
 
   # Create ansible user with sudo
   if ($ansible::master::manage_user) {
