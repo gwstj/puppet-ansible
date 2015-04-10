@@ -29,8 +29,8 @@
 # }
 #
 class ansible::node(
-  $master = 'none'
-  $sudo   = 'enable'
+  $master = 'none',
+  $sudo   = 'enable',
   ){
 
   include ansible::params
