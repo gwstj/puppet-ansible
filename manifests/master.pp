@@ -52,8 +52,8 @@
 class ansible::master(
   $provider = 'pip',
   $sudo = 'enable',
-  $manage_ssh_known_hosts = 'true',
-  $manage_user = 'true',
+  $manage_ssh_known_hosts = true,
+  $manage_user = true,
   ){
 
   include ansible::params
