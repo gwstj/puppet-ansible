@@ -82,17 +82,13 @@ class ansible::user(
   # Enable sudo
   if $ansible::user::sudo == 'enable' {
 
-    # Install Sudo if it don't already exist
-    ensure_packages([ 'sudo' ])
+    # Install and manage sudo
+    # (use: https://forge.puppetlabs.com/saz/sudo)
+    class { 'sudo': }
 
     # Ansible user can do everything with sudo
-    file { '/etc/sudoers.d/ansible' :
-      ensure  => file,
-      mode    => '0440',
-      owner   => 'root',
-      group   => 'root',
+    sudo::conf { 'ansible':
       content => 'ansible ALL = NOPASSWD : ALL',
-      require => Package['sudo']
     }
   }
 
