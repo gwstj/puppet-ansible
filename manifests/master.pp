@@ -64,7 +64,7 @@ class ansible::master(
   # Create ansible user with sudo
   if ($ansible::master::manage_user) {
     class { 'ansible::user' :
-      sudo => $ansible::user::sudo,
+      sudo => $ansible::master::sudo,
     }
   }
 
