@@ -48,7 +48,7 @@ class ansible::user(
 
   include ansible::params
 
-  validate_string($sudo, ['enable', 'disable'])
+  validate_re($sudo, ['^enable$', '^disable$'])
 
   # Create an 'ansible' user
   user { $ansible::user::username:
